@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hug Day | Feel My Warmth</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+
+        /* Custom Popup */
+        #custom-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            z-index: 100;
+            text-align: center;
+            min-width: 280px;
+        }
+
+        #popup-text { font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; display: block; color: #ff4d6d; }
+        .close-popup-btn {
+            background: #ff7e5f;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(5px);
+            z-index: 99;
+        }
+
+        /* Card Container */
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            z-index: 10;
+        }
+
+        h2 { font-family: 'Dancing Script', cursive; font-size: 2.5rem; margin-bottom: 15px; color: #ff4e50; }
+        .question { font-size: 1.1rem; margin-bottom: 25px; font-weight: 500; }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            margin: 12px 0;
+            border: 2px solid #ff7e5f;
+            background: transparent;
+            color: #ff7e5f;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn:hover { background: #ff7e5f; color: white; transform: translateY(-3px); }
+
+        /* Hug Page */
+        #hug-page { display: none; }
+        .slogan { font-family: 'Dancing Script', cursive; font-size: 1.5rem; color: #d63384; margin-bottom: 30px; line-height: 1.5; }
+        
+        .hug-icon { font-size: 90px; display: block; margin-bottom: 20px; animation: pulse 2s infinite; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        #hug-btn {
+            background: #ff4e50;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.1rem;
+            box-shadow: 0 5px 15px rgba(255, 78, 80, 0.4);
+        }
+
+        #final-msg {
+            display: none;
+            position: fixed;
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: white;
+            z-index: 101;
+            text-align: center;
+            width: 100%;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .falling-item {
+            position: fixed; top: -10%; z-index: 50; animation: fall linear forwards;
+        }
+
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div id="overlay"></div>
+
+    <div id="custom-popup">
+        <span id="popup-text"></span>
+        <button class="close-popup-btn" onclick="closePopup()">Try Again</button>
+    </div>
+
+    <div class="card" id="quiz-page">
+        <h2>Warm Question 🫂</h2>
+        <p class="question">Neeku nenu chinnappati nunchi istam kadha?</p>
+        <button class="btn" onclick="handleChoice(1)">avunu 🙈</button>
+        <button class="btn" onclick="handleChoice(2)">kadhu 😒</button>
+        <button class="btn" onclick="handleChoice(3)">ninnu evaraina ista padtharu ram 😏</button>
+    </div>
+
+    <div class="card" id="hug-page">
+        <span class="hug-icon">🫂</span>
+        <div class="slogan">"I want to wrap you in my arms and feel your heart beat against mine. A hug from you is the only place I feel truly safe, and truly yours."</div>
+        <button id="hug-btn" onclick="celebrate()">Hug Taken</button>
+    </div>
+
+    <div id="final-msg">Yay! Thank You Potti 💖</div>
+
+    <script>
+        function handleChoice(optionNum) {
+            const popup = document.getElementById('custom-popup');
+            const overlay = document.getElementById('overlay');
+            const text = document.getElementById('popup-text');
+            const btn = document.querySelector('.close-popup-btn');
+
+            if (optionNum === 1) {
+                text.innerHTML = "Muah Correcttttt Answer 💋";
+                btn.innerText = "Come Closer";
+                btn.onclick = function() {
+                    closePopup();
+                    document.getElementById('quiz-page').style.display = 'none';
+                    document.getElementById('hug-page').style.display = 'block';
+                };
+            } else {
+                text.innerHTML = "Chi Pove Pottidhana 😠";
+                btn.innerText = "Try Again";
+                btn.onclick = closePopup;
+            }
+            popup.style.display = 'block';
+            overlay.style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById('custom-popup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        function celebrate() {
+            document.getElementById('hug-page').style.opacity = '0.1';
+            document.getElementById('final-msg').style.display = 'block';
+            
+            const items = ['🫂', '❤️', '🔥', '💖', '🫂'];
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const item = document.createElement('div');
+                    item.classList.add('falling-item');
+                    item.innerHTML = items[Math.floor(Math.random() * items.length)];
+                    item.style.left = Math.random() * 100 + "vw";
+                    item.style.fontSize = (Math.random() * 25 + 20) + "px";
+                    item.style.animationDuration = (Math.random() * 3 + 2) + "s";
+                    document.body.appendChild(item);
+                }, i * 70);
+            }
+        }
+    </script>
+</body>
+</html>
